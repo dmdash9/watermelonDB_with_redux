@@ -1,0 +1,2 @@
+- its libraries were setup only for Android. So run on Android
+- Use ts-standard linter and StandardJS plugin for Visual Studio Code 
