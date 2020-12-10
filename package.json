@@ -1,0 +1,50 @@
+{
+  "name": "watermelon",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@nozbe/watermelondb": "^0.20.0",
+    "@react-native-community/netinfo": "^5.9.9",
+    "@reduxjs/toolkit": "^1.5.0",
+    "react": "16.13.1",
+    "react-native": "0.63.4",
+    "react-redux": "^7.2.2",
+    "recyclerlistview": "^3.0.0",
+    "redux": "^4.0.5",
+    "tslib": "^2.0.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.4",
+    "@babel/plugin-proposal-decorators": "^7.12.1",
+    "@babel/preset-typescript": "^7.12.7",
+    "@babel/runtime": "^7.8.4",
+    "@types/react": "^17.0.0",
+    "@types/react-native": "^0.63.37",
+    "@types/react-redux": "^7.1.11",
+    "babel-eslint": "^10.1.0",
+    "babel-jest": "^25.1.0",
+    "babel-plugin-module-resolver": "^4.0.0",
+    "eslint": "^6.5.1",
+    "jest": "^25.1.0",
+    "metro-react-native-babel-preset": "^0.59.0",
+    "react-native-typescript-transformer": "^1.2.13",
+    "react-test-renderer": "16.13.1",
+    "ts-standard": "^10.0.0",
+    "typescript": "^4.1.2"
+  },
+  "jest": {
+    "preset": "react-native"
+  },
+  "ts-standard": {
+    "ignore": [
+      "node_modules/**"
+    ],
+    "project": "./tsconfig.json"
+  }
+}
