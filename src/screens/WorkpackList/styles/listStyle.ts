@@ -24,5 +24,10 @@ export default StyleSheet.create({
   IconButton: {
     bottom: 30,
     right: 10
+  },
+  pullChangesButton: {
+    width: '90%',
+    marginTop: 15,
+    marginHorizontal: '5%'
   }
 })

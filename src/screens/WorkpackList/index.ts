@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { WorkpackList, WorkpackListProps } from './WorkpackList'
 import { createWorkpack, updateWorkpack, deleteWorkpack } from '@store/workpack/actions'
 import { createItemFromMock } from '@database/workpack/mock'
+import { pullChanges } from '@database/DatabaseInstance'
 import { IWorkpack } from '@setup/types'
 
 async function create () {
@@ -19,7 +20,8 @@ const mapStateToProps = (state: RootState): WorkpackListProps => {
     count: state.workpack.count,
     create,
     update,
-    delete: deleteWorkpack
+    delete: deleteWorkpack,
+    pullChanges
   }
 }
 

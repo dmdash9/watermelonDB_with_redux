@@ -71,6 +71,9 @@ export async function deleteWorkpack (uuid: string) {
 
       if (matched) {
         await matched[0].markAsDeleted() // syncable
+
+        // NOTE: I THINK THAT I MUST NOT DELETE IT PERMANENTLY UNTIL I SYNC IT SUCCESSFULLY
+        // SO, possibly instead I should store some stack of items for permanent delition. Delete them and flush the stack in next successfull sync
         await matched[0].destroyPermanently() // permanent
 
         ActionCreators.deleteWorkpack(uuid)
