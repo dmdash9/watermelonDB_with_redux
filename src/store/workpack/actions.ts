@@ -3,16 +3,18 @@
 
 import { Q } from '@nozbe/watermelondb'
 import { IWorkpack } from '@app/setup/types';
-import database from '@database/DatabaseInstance'
+import database, { dbSync } from '@database/DatabaseInstance'
 import { WorkpackModel } from '@database/workpack/workpacks.watermelon'
 import { ActionCreators } from './'
 
-// NOTE: we need mappings between model and item in redux store
+const CLIENT_UUID = 1
 
+// NOTE: we need mappings between model and item in redux store
+// NOTE: we need to autoinrement uuid and get clientUuid from store (currently all goes from template)
 export async function createWorkpack (workpack: IWorkpack) {
   await database.action(async () => {
     try {
-      const entity = await database.collections.get<WorkpackModel>('workpacks')
+      await database.collections.get<WorkpackModel>('workpacks')
         .create((entity) => {
           entity.uuid = workpack.uuid
           entity.clientUuid = workpack.clientUuid
@@ -24,9 +26,9 @@ export async function createWorkpack (workpack: IWorkpack) {
           entity.auditDueDate = workpack.auditDueDate
           entity.fulfilmentDueDate = workpack.fulfilmentDueDate
         })
-      console.log('ÍD ', entity.id)
 
       ActionCreators.createWorkpack(workpack)
+      dbSync(CLIENT_UUID)
     } catch (err) {
       // display an error
       console.log('ERROR occured: ', err)
@@ -55,6 +57,7 @@ export async function updateWorkpack (workpack: IWorkpack) {
           })
 
         ActionCreators.updateWorkpack(workpack)
+        dbSync(CLIENT_UUID)
       }
     } catch (err) {
       // display an error
@@ -71,9 +74,14 @@ export async function deleteWorkpack (uuid: string) {
 
       if (matched) {
         await matched[0].markAsDeleted() // syncable
-        await matched[0].destroyPermanently() // permanent
+
+        // NOTE: I THINK THAT I MUST NOT DELETE IT PERMANENTLY UNTIL I SYNC IT SUCCESSFULLY
+        // SO, possibly instead I should store some stack of items for permanent delition. Delete them and flush the stack in next successfull sync
+
+        // await matched[0].destroyPermanently() // permanent
 
         ActionCreators.deleteWorkpack(uuid)
+        dbSync(CLIENT_UUID)
       }
     } catch (err) {
       // display an error

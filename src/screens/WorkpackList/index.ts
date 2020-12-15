@@ -3,7 +3,10 @@ import { connect } from 'react-redux'
 import { WorkpackList, WorkpackListProps } from './WorkpackList'
 import { createWorkpack, updateWorkpack, deleteWorkpack } from '@store/workpack/actions'
 import { createItemFromMock } from '@database/workpack/mock'
+import { dbSync } from '@database/DatabaseInstance'
 import { IWorkpack } from '@setup/types'
+
+const CLIENT_UUID = 1
 
 async function create () {
   return createWorkpack(createItemFromMock())
@@ -19,7 +22,8 @@ const mapStateToProps = (state: RootState): WorkpackListProps => {
     count: state.workpack.count,
     create,
     update,
-    delete: deleteWorkpack
+    delete: deleteWorkpack,
+    sync: () => dbSync(CLIENT_UUID)
   }
 }
 

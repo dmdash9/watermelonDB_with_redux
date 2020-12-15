@@ -1,0 +1,16 @@
+{
+  "parser": "babel-eslint",
+  "extends": [
+    "eslint:recommended"
+  ],
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true
+  },
+  "rules": {
+    "arrow-parens": ["warn", "as-needed"],
+    "object-curly-newline": ["warn", { "consistent": true }],
+    "semi": ["warn", "always"]
+  }
+}

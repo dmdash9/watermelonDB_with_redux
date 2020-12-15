@@ -12,6 +12,8 @@
     "@nozbe/watermelondb": "^0.20.0",
     "@react-native-community/netinfo": "^5.9.9",
     "@reduxjs/toolkit": "^1.5.0",
+    "axios": "^0.21.0",
+    "qs": "^6.9.4",
     "react": "16.13.1",
     "react-native": "0.63.4",
     "react-redux": "^7.2.2",
