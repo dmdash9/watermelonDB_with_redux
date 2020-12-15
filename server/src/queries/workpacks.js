@@ -68,27 +68,26 @@ WHERE uuid = ${uuid};
 `
 )
 
-export const getLatestChangesQuery = (clientUuid) => (
+// NOTE: working with last_pulled_at on DB level is incorrect as the pull might fail on cliend side.
+// Observe how client sync works and then FIX
+export const getLatestChangesQuery = (clientUuid, lastPulledAt) => (
 `
 SET AUTOCOMMIT=0;
 BEGIN;
 
 SET @nowTimestamp = UNIX_TIMESTAMP();
 
-SELECT last_pulled_at FROM pickr.clients WHERE uuid = ${clientUuid} INTO @prevLastPulledAt;
-UPDATE pickr.clients SET last_pulled_at = @nowTimestamp WHERE uuid = ${clientUuid};
-
-SELECT @prevLastPulledAt;
+SELECT @nowTimestamp;
 
 SELECT uuid, client_uuid, name, company_name, start_date, end_date, duct_100_count, audit_due_date, fulfilment_due_date, updated_at, created_at, is_deleted FROM pickr.workpacks
-WHERE client_uuid = ${clientUuid} AND updated_at > @prevLastPulledAt;
+WHERE client_uuid = ${clientUuid} AND updated_at > ${lastPulledAt || 0};
 
 COMMIT;
 `
 )
 
 /*
-NOTE: we do not use client-side timestamp mark for now because:
+NOTE: we do not use client-side lastPulledAt mark for now because:
 - we might implement it another way (keeing track of errored-not-synced items to pull only them later)
 - this might be not the real case or a trivial one for us so we might avoid these extra checks
 
@@ -97,7 +96,7 @@ This scenario means that there's a conflict, and record was updated remotely bet
 
 NOTE: we have only workpacks in the example and all the namings are made in accordance. So, not to refactor to make it generic it works only for workpacks
  */
-export function applyChangesQuery ({ changes, timestamp }) {
+export function applyChangesQuery (changes, lastPulledAt) {
   const transaction = `
 SET AUTOCOMMIT=0;
 BEGIN;

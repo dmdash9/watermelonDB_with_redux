@@ -1,43 +1,27 @@
 import axios from 'axios'
-import qs from 'qs'
 
-const TIMEOUT = 10000
-
+// NOTE: REPLACE WITH YOUR OWN IP
+// TODO: refactor to get this from .env 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:8080/',
-  timeout: TIMEOUT // this takes cases when the server takes too long to respond
+  baseURL: 'http://192.168.31.86:8080/',
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json'
+  }
 })
 
-
-export async function makeApiCall (uri, data, configs) {
-  let url = uri
+export async function makeApiCall (url, data, configs) {
+  console.log('sending - ', data)
   try {
-    if (configs.qsParams.length) {
-      const qStr = qs.stringify(configs.qsParams)
-      url = `${url}/${qStr}`
-    }
-
-    const headers = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json'
-    }
-
     const response = await apiClient({
       url,
       data,
-      headers,
       method: configs.method
     })
 
-    return configs.normalizer(response.data)
+    return response.data
   } catch (error) {
-    const responseError = error.response || {}
-
-    console.log(
-      `*********  NETWORK REQUEST FAILED.
-      ${`Status - ${responseError.status}`}`
-    )
-
+    console.log('*********  ERROR:::: ', error)
     return { error }
   }
 }

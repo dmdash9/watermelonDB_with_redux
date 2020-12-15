@@ -4,7 +4,7 @@ export function createChangesPayload (results, table) {
     return null
   }
   return {
-    timestamp: getSQLQueryResults(results[0])[0]['@lastPulledAt'],
+    timestamp: getSQLQueryResults(results[0])[0]['@nowTimestamp'],
     changes: mapQueryResultsToChanges(getSQLQueryResults(results[1]), table)
   }
 }

@@ -22,14 +22,14 @@ export function deleteWorkpack (uuid) {
   return makeQuery({ query, singleRes: true })
 }
 
-export function getLatestChanges (clientUuid) {
-  const query = getLatestChangesQuery(clientUuid)
+export function getLatestChanges (clientUuid, lastPulledAt) {
+  const query = getLatestChangesQuery(clientUuid, lastPulledAt)
   return makeQuery({ query })
 }
 
 // { changes, timestamp }
-export function applyChanges (payload) {
-  const query = applyChangesQuery(payload)
+export function applyChanges (changes, lastPulledAt) {
+  const query = applyChangesQuery(changes, lastPulledAt)
   // return query
   return makeQuery({ query })
 }

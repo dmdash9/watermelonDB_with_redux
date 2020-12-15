@@ -12,7 +12,7 @@ export interface WorkpackListProps {
   create: () => Promise<void>,
   update: (workpack: IWorkpack) => Promise<void>,
   delete: (uuid: string) => Promise<void>,
-  pullChanges: () => Promise<void> // change to {changes, timestamp later}
+  sync: () => Promise<void>
 }
 
 export function WorkpackList (props: WorkpackListProps) {
@@ -32,8 +32,8 @@ export function WorkpackList (props: WorkpackListProps) {
         <>
           <Button
             style={actionButtonStyle}
-            onPress={props.pullChanges}
-            text='Pull Changes'
+            onPress={props.sync}
+            text='Sync'
           />
           <View style={styles.noDataBlock}>
             <Text style={styles.noData}>No workpacks</Text>
@@ -46,12 +46,13 @@ export function WorkpackList (props: WorkpackListProps) {
       <>
         <Button
           style={actionButtonStyle}
-          onPress={props.pullChanges}
+          onPress={props.sync}
           text='Pull Changes'
         />
         <ScrollView contentContainerStyle={styles.scrollView}>
           {
             props.workpacks.map(v => {
+              console.log('v - ', v)
               return (
                 <WorkpackItem
                   key={v.uuid}

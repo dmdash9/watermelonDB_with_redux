@@ -23,13 +23,13 @@ const workpackSlice = createSlice({
       state.count += 1
     },
     updateWorkpack: (state, action) => {
-      const idx = state.results.findIndex(v => v.uuid === action.payload.uuid)
+      const idx = state.results.findIndex(v => v.uuid.toString() === action.payload.uuid.toString())
       if (idx > -1) {
-        state.results[idx] = { ...state.results[idx], ...action.payload }
+        state.results[idx] = action.payload
       }
     },
     deleteWorkpack: (state, action) => {
-      const idx = state.results.findIndex(v => v.uuid === action.payload)
+      const idx = state.results.findIndex(v => v.uuid.toString() === action.payload.toString())
       if (idx > -1) {
         state.results.splice(idx, 1)
       }
