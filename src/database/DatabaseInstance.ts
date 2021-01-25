@@ -55,11 +55,8 @@ export async function dbSync(clientUuid) {
 
   // NOTE: we might get not synced items from auxiliary table and send those to backend to get them in pullChanges
   async function pullChanges(args: SyncPullArgs): Promise<SyncPullResult> {
-    console.log('pullChanges args - ', args)
     const response = await makeApiCall(`sync?clientUuid=${clientUuid}&lastPulledAt=${args.lastPulledAt}`, null, { method: 'get' })
-    console.log('pullChanges response - ', JSON.stringify(response, null, 4))
     if (response.error) {
-      console.log(response.error)
       throw new Error(response.error)
     }
     return response
@@ -70,10 +67,8 @@ export async function dbSync(clientUuid) {
   // in the end of push we need to update the table or errored sync items (remove old and add new if any)
   async function pushChanges(args: SyncPushArgs): Promise<void> {
     const { lastPulledAt, changes } = args
-    console.log('pushChanges changes::: - ', JSON.stringify(changes, null, 4))
+
     const response = await makeApiCall(`sync?lastPulledAt=${lastPulledAt}`, changes, { method: 'post' })
-    await wait(7000)
-    console.log('WAITED_@@@')
     if (response.error) {
       throw new Error(response.error)
     }

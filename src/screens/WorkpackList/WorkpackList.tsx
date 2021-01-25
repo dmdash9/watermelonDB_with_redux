@@ -63,7 +63,6 @@ export function WorkpackList(props: WorkpackListProps) {
         <ScrollView contentContainerStyle={styles.scrollView}>
           {
             props.workpacks.map(v => {
-              console.log('v - ', v)
               return (
                 <WorkpackItem
                   key={v.uuid}
