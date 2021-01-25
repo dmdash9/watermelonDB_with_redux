@@ -6,7 +6,7 @@ export const workpacksSchema = tableSchema({
   name: workpacksTableName,
   columns: [
     { name: WorkpackColumns.Uuid, type: 'string', isOptional: true },
-    { name: WorkpackColumns.ClientUuid, type: 'string', isIndexed: true },
+    { name: WorkpackColumns.ClientUuid, type: 'string', isOptional: true },
     { name: WorkpackColumns.Name, type: 'string' },
     { name: WorkpackColumns.CompanyName, type: 'string', isOptional: true },
     { name: WorkpackColumns.StartDate, type: 'string', isOptional: true },

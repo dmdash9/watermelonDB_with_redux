@@ -31,6 +31,7 @@ function mapQueryResultsToChanges (results, table) {
 
 function trimFieldsFromItem (item) {
   const clone = { ...item }
+  clone.id = clone.uuid
   delete clone.is_deleted
   delete clone.updated_at
   delete clone.created_at

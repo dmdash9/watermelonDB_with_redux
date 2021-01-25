@@ -1,7 +1,8 @@
 let seed = 1
 const template = {
-  uuid: '1',
-  clientUuid: '1',
+  id: '1',
+  uuid: null,
+  clientUuid: null,
   name: 'Mr Will',
   companyName: 'Pickr',
   startDate: '2020-12-07T00:00:00.000Z',
@@ -11,11 +12,11 @@ const template = {
   fulfilmentDueDate: '2020-12-07T00:00:00.000Z'
 }
 
-export function createItemFromMock () {
+export function createItemFromMock() {
   const newWorkpack = {
     ...template,
-    uuid: seed.toString(),
-    clientUuid: seed.toString(),
+    // uuid: seed.toString(),
+    // clientUuid: seed.toString(),
     name: `${template.name}_${seed}`
   }
   seed += 1

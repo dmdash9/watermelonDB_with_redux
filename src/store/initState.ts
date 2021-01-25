@@ -16,6 +16,7 @@ export default async function () {
       count,
       results: results.map(v => {
         return {
+          id: v.id,
           uuid: v.uuid,
           clientUuid: v.clientUuid,
           startDate: v.startDate,

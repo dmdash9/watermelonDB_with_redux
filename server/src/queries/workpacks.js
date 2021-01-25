@@ -17,8 +17,8 @@ const createWorkpackQueryBody = (workpack) => (
   `
 INSERT INTO pickr.workpacks(uuid, client_uuid, name, company_name, start_date, end_date, duct_100_count, audit_due_date, fulfilment_due_date, updated_at, created_at, is_deleted)
 VALUES (
-  ${workpack.uuid},
-  ${workpack.client_uuid},
+  ${mysql.escape(workpack.id)},
+  1,
   ${mysql.escape(workpack.name)},
   ${mysql.escape(workpack.company_name)},
   STR_TO_DATE(${mysql.escape(workpack.start_date)}, ${mysql.escape(DATE_FORMAT)}),
@@ -53,7 +53,7 @@ audit_due_date = STR_TO_DATE(${mysql.escape(workpack.audit_due_date)},${mysql.es
 fulfilment_due_date = STR_TO_DATE(${mysql.escape(workpack.fulfilment_due_date)},${mysql.escape(DATE_FORMAT)}),
 updated_at = UNIX_TIMESTAMP()
 
-WHERE uuid = ${workpack.uuid};
+WHERE uuid = ${mysql.escape(workpack.uuid)};
 `
 )
 
@@ -64,7 +64,7 @@ UPDATE pickr.workpacks SET
 updated_at = UNIX_TIMESTAMP(),
 is_deleted = 1
 
-WHERE uuid = ${uuid};
+WHERE uuid = ${mysql.escape(uuid)};
 `
 )
 
@@ -80,7 +80,7 @@ SET @nowTimestamp = UNIX_TIMESTAMP();
 SELECT @nowTimestamp;
 
 SELECT uuid, client_uuid, name, company_name, start_date, end_date, duct_100_count, audit_due_date, fulfilment_due_date, updated_at, created_at, is_deleted FROM pickr.workpacks
-WHERE client_uuid = ${clientUuid} AND updated_at > ${lastPulledAt || 0};
+WHERE client_uuid = ${mysql.escape(clientUuid)} AND updated_at > ${lastPulledAt || 0};
 
 COMMIT;
 `

@@ -1,7 +1,7 @@
 // import { makeApiCall } from '@setup/api-client'
 // import { Endpoints } from '@setup/api-client/Endpoints'
 
-import { Q } from '@nozbe/watermelondb'
+import { v4 as uuidv4 } from 'uuid';
 import { IWorkpack } from '@app/setup/types';
 import database, { dbSync } from '@database/DatabaseInstance'
 import { WorkpackModel } from '@database/workpack/workpacks.watermelon'
@@ -11,13 +11,43 @@ const CLIENT_UUID = 1
 
 // NOTE: we need mappings between model and item in redux store
 // NOTE: we need to autoinrement uuid and get clientUuid from store (currently all goes from template)
-export async function createWorkpack (workpack: IWorkpack) {
+export async function createWorkpack(workpack: IWorkpack) {
   await database.action(async () => {
     try {
+      const id = uuidv4()
       await database.collections.get<WorkpackModel>('workpacks')
         .create((entity) => {
-          entity.uuid = workpack.uuid
-          entity.clientUuid = workpack.clientUuid
+          // entity.uuid = workpack.uuid
+          entity.clientUuid = CLIENT_UUID
+          entity.startDate = workpack.startDate
+          entity.endDate = workpack.endDate
+          entity.name = workpack.name
+          entity.companyName = workpack.companyName
+          entity.duct100Count = workpack.duct100Count
+          entity.auditDueDate = workpack.auditDueDate
+          entity.fulfilmentDueDate = workpack.fulfilmentDueDate
+
+          entity._raw.id = id
+        })
+
+
+      ActionCreators.createWorkpack({ ...workpack, id })
+      // dbSync(CLIENT_UUID)
+    } catch (err) {
+      // display an error
+      console.log('ERROR occured: ', err)
+    }
+  })
+}
+
+export async function updateWorkpack(workpack: IWorkpack) {
+  await database.action(async () => {
+    try {
+      const workpacks = database.collections.get<WorkpackModel>('workpacks')
+      const matched = await workpacks.find(workpack.id)
+
+      if (matched) {
+        await matched.update((entity) => {
           entity.startDate = workpack.startDate
           entity.endDate = workpack.endDate
           entity.name = workpack.name
@@ -27,37 +57,8 @@ export async function createWorkpack (workpack: IWorkpack) {
           entity.fulfilmentDueDate = workpack.fulfilmentDueDate
         })
 
-      ActionCreators.createWorkpack(workpack)
-      dbSync(CLIENT_UUID)
-    } catch (err) {
-      // display an error
-      console.log('ERROR occured: ', err)
-    }
-  })
-}
-
-export async function updateWorkpack (workpack: IWorkpack) {
-  await database.action(async () => {
-    try {
-      const workpacks = database.collections.get<WorkpackModel>('workpacks')
-      const matched = await workpacks.query(Q.where('uuid', workpack.uuid)).fetch()
-
-      if (matched) {
-        await matched[0]
-          .update((entity) => {
-            entity.uuid = workpack.uuid
-            entity.clientUuid = workpack.clientUuid
-            entity.startDate = workpack.startDate
-            entity.endDate = workpack.endDate
-            entity.name = workpack.name
-            entity.companyName = workpack.companyName
-            entity.duct100Count = workpack.duct100Count
-            entity.auditDueDate = workpack.auditDueDate
-            entity.fulfilmentDueDate = workpack.fulfilmentDueDate
-          })
-
-        ActionCreators.updateWorkpack(workpack)
-        dbSync(CLIENT_UUID)
+        ActionCreators.updateWorkpack({ ...workpack, id: matched.id })
+        // dbSync(CLIENT_UUID)
       }
     } catch (err) {
       // display an error
@@ -66,22 +67,22 @@ export async function updateWorkpack (workpack: IWorkpack) {
   })
 }
 
-export async function deleteWorkpack (uuid: string) {
+export async function deleteWorkpack(id: string) {
   await database.action(async () => {
     try {
       const workpacks = database.collections.get<WorkpackModel>('workpacks')
-      const matched = await workpacks.query(Q.where('uuid', uuid)).fetch()
+      const matched = await workpacks.find(id)
 
       if (matched) {
-        await matched[0].markAsDeleted() // syncable
+        await matched.markAsDeleted() // syncable
 
         // NOTE: I THINK THAT I MUST NOT DELETE IT PERMANENTLY UNTIL I SYNC IT SUCCESSFULLY
         // SO, possibly instead I should store some stack of items for permanent delition. Delete them and flush the stack in next successfull sync
 
         // await matched[0].destroyPermanently() // permanent
 
-        ActionCreators.deleteWorkpack(uuid)
-        dbSync(CLIENT_UUID)
+        ActionCreators.deleteWorkpack(id)
+        // dbSync(CLIENT_UUID)
       }
     } catch (err) {
       // display an error

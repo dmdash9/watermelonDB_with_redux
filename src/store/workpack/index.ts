@@ -23,13 +23,13 @@ const workpackSlice = createSlice({
       state.count += 1
     },
     updateWorkpack: (state, action) => {
-      const idx = state.results.findIndex(v => v.uuid.toString() === action.payload.uuid.toString())
+      const idx = state.results.findIndex(v => v.id.toString() === action.payload.id.toString())
       if (idx > -1) {
         state.results[idx] = action.payload
       }
     },
     deleteWorkpack: (state, action) => {
-      const idx = state.results.findIndex(v => v.uuid.toString() === action.payload.toString())
+      const idx = state.results.findIndex(v => v.id.toString() === action.payload.toString())
       if (idx > -1) {
         state.results.splice(idx, 1)
       }
@@ -38,7 +38,7 @@ const workpackSlice = createSlice({
 })
 
 export let ActionCreators = workpackSlice.actions
-export function initBindActionsWorkpack (dispatch, bindActionCreators) {
+export function initBindActionsWorkpack(dispatch, bindActionCreators) {
   ActionCreators = bindActionCreators({
     ...workpackSlice.actions
   }, dispatch)

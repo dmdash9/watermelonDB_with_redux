@@ -36,9 +36,12 @@ const database = new Database({
   actionsEnabled: true
 })
 
-const log = {}
-export async function dbSync (clientUuid) {
+export async function resetDb() {
+  return database.action(() => database.unsafeResetDatabase())
+}
 
+const log = {}
+export async function dbSync(clientUuid) {
   // NOTE: we do not store last_pulled_at locally and do not send it
   // it is stored on the backend in the current implementation
   // and we do not use other arguments as well as that goes beyond basic example
@@ -51,10 +54,10 @@ export async function dbSync (clientUuid) {
   // So, this might be used only if we know cases when the loss would never occur.
 
   // NOTE: we might get not synced items from auxiliary table and send those to backend to get them in pullChanges
-  async function pullChanges (args: SyncPullArgs): Promise<SyncPullResult> {
+  async function pullChanges(args: SyncPullArgs): Promise<SyncPullResult> {
     console.log('pullChanges args - ', args)
     const response = await makeApiCall(`sync?clientUuid=${clientUuid}&lastPulledAt=${args.lastPulledAt}`, null, { method: 'get' })
-    console.log('pullChanges response - ', response)
+    console.log('pullChanges response - ', JSON.stringify(response, null, 4))
     if (response.error) {
       console.log(response.error)
       throw new Error(response.error)
@@ -65,10 +68,12 @@ export async function dbSync (clientUuid) {
   // NOTE: we might get not synced items as array of tables and ids and store that in separate auxiliary table
   // to send them later in pullChanges (and this also might be the signal to restart sync, but with lesser payloads now as we updated last_pulled_at)
   // in the end of push we need to update the table or errored sync items (remove old and add new if any)
-  async function pushChanges (args: SyncPushArgs): Promise<void> {
+  async function pushChanges(args: SyncPushArgs): Promise<void> {
     const { lastPulledAt, changes } = args
-
+    console.log('pushChanges changes::: - ', JSON.stringify(changes, null, 4))
     const response = await makeApiCall(`sync?lastPulledAt=${lastPulledAt}`, changes, { method: 'post' })
+    await wait(7000)
+    console.log('WAITED_@@@')
     if (response.error) {
       throw new Error(response.error)
     }
@@ -90,6 +95,15 @@ export async function dbSync (clientUuid) {
   }
 
   console.log('SYNC LOG:: ', log)
+}
+
+async function wait(delay: number): Promise<void> {
+  return new Promise((resolve) => {
+    const delayTimeout = setTimeout(() => {
+      clearTimeout(delayTimeout);
+      resolve();
+    }, delay);
+  });
 }
 
 export default database

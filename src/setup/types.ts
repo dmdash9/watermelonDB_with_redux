@@ -1,6 +1,7 @@
 export interface IWorkpack {
-  uuid: string,
-  clientUuid: string,
+  id: string,
+  uuid: string | null,
+  clientUuid: string | null,
   name: string,
   companyName: string | null,
   startDate: string | null,

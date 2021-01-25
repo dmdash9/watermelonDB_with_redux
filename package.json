@@ -9,17 +9,20 @@
     "test": "jest"
   },
   "dependencies": {
-    "@nozbe/watermelondb": "^0.20.0",
+    "@nozbe/watermelondb": "^0.18.0",
     "@react-native-community/netinfo": "^5.9.9",
     "@reduxjs/toolkit": "^1.5.0",
     "axios": "^0.21.0",
+    "buffer": "^6.0.3",
     "qs": "^6.9.4",
     "react": "16.13.1",
     "react-native": "0.63.4",
+    "react-native-get-random-values": "^1.5.1",
     "react-redux": "^7.2.2",
     "recyclerlistview": "^3.0.0",
     "redux": "^4.0.5",
-    "tslib": "^2.0.3"
+    "tslib": "^2.0.3",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",

@@ -37,7 +37,7 @@ const App = () => {
     </Provider>
   )
 
-  async function init () {
+  async function init() {
     const store = await createStore()
 
     if (unmountingRef.current) {

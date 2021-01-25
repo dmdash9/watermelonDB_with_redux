@@ -12,10 +12,11 @@ export interface WorkpackListProps {
   create: () => Promise<void>,
   update: (workpack: IWorkpack) => Promise<void>,
   delete: (uuid: string) => Promise<void>,
-  sync: () => Promise<void>
+  sync: () => Promise<void>,
+  reset: () => Promise<void>
 }
 
-export function WorkpackList (props: WorkpackListProps) {
+export function WorkpackList(props: WorkpackListProps) {
   return (
     <SafeAreaView style={styles.container}>
       {renderContent()}
@@ -26,7 +27,7 @@ export function WorkpackList (props: WorkpackListProps) {
     </SafeAreaView>
   )
 
-  function renderContent () {
+  function renderContent() {
     if (props.count === 0) {
       return (
         <>
@@ -34,6 +35,11 @@ export function WorkpackList (props: WorkpackListProps) {
             style={actionButtonStyle}
             onPress={props.sync}
             text='Sync'
+          />
+          <Button
+            style={actionButtonStyle}
+            onPress={props.reset}
+            text='Reset'
           />
           <View style={styles.noDataBlock}>
             <Text style={styles.noData}>No workpacks</Text>
@@ -47,7 +53,12 @@ export function WorkpackList (props: WorkpackListProps) {
         <Button
           style={actionButtonStyle}
           onPress={props.sync}
-          text='Pull Changes'
+          text='Sync'
+        />
+        <Button
+          style={actionButtonStyle}
+          onPress={props.reset}
+          text='Reset'
         />
         <ScrollView contentContainerStyle={styles.scrollView}>
           {

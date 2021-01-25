@@ -10,7 +10,7 @@ export interface WorkpackItemProps {
   delete: (uuid: string) => Promise<void>
 }
 
-export function WorkpackItem (props: WorkpackItemProps) {
+export function WorkpackItem(props: WorkpackItemProps) {
   const { workpack } = props
 
   return (
@@ -39,7 +39,7 @@ export function WorkpackItem (props: WorkpackItemProps) {
         />
         <Button
           style={actionButtonStyle}
-          onPress={() => props.delete(workpack.uuid)}
+          onPress={() => props.delete(workpack.id)}
           text='Delete'
         />
       </View>
